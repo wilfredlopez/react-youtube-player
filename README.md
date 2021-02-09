@@ -6,7 +6,7 @@ import {
   ReactYouTube,
   YouTubePlayerType,
   PlayerStates,
-} from 'react-youtube-player'
+} from '@wl/react-youtube-player'
 
 interface Props {}
 
