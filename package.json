@@ -1,0 +1,39 @@
+{
+  "name": "react-youtube-player",
+  "version": "1.0.0",
+  "description": "",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "sideEffects": false,
+  "files": [
+    "lib/",
+    "esm/"
+  ],
+  "scripts": {
+    "build:cjs": "tsc",
+    "build:es": "tsc -m esNext --outDir esm",
+    "build": "yarn build:cjs && yarn build:es",
+    "clean": "rimraf lib esm"
+  },
+  "keywords": [],
+  "author": "WIlfred Lopez",
+  "license": "Unlicense",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wilfredlopez/react-use-light"
+  },
+  "bugs": {
+    "url": "https://github.com/wilfredlopez/react-use-light/issues"
+  },
+  "homepage": "https://github.com/wilfredlopez/react-use-light#readme",
+  "peerDependencies": {
+    "react": "17.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.1",
+    "react": "^17.0.1",
+    "typescript": "^4.1.3"
+  }
+}
