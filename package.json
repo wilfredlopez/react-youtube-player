@@ -1,9 +1,9 @@
 {
   "name": "@wilfredlopez/react-youtube-player",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "react youtube player component",
-  "types": "dist/index.d.ts",
-  "typings": "dist/index.d.ts",
+  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
   "main": "lib/index.js",
   "module": "esm/index.js",
   "sideEffects": false,

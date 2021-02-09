@@ -1,6 +1,6 @@
 # React Youtube Player Component
 
-### Install
+## Install
 
 ```bash
 yarn add @wilfredlopez/react-youtube-player
