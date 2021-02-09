@@ -1,13 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import createYouTubePlayer, { PlayerStates } from './youtube-player'
-import type { YouTubePlayerInterface, OptionsType, EventType } from './youtube-player'
+import type { YouTubePlayerInterface, OptionsType, EventType, PlayerVars } from './youtube-player'
 import { YouTubePlayerType } from './youtube-player/types'
 
 interface Props {
     videoId: string
     id: string
+    disableAutoLoad?: boolean
     className?: string
-    opts?: Omit<OptionsType, 'events'>
+    opts?: {
+        height?: number,
+        width?: number | string
+    }
+    playlist?: string
+    playerVars?: Omit<PlayerVars, 'playlist' | 'autoplay'>
+    autoPlay?: boolean
 
     // custom class name for player container element
     containerClassName?: string
@@ -117,7 +124,33 @@ export const ReactYouTube = (props: Props) => {
         (event: EventType) => callPropFunction(props.onPlaybackQualityChange, event),
         [callPropFunction, props.onPlaybackQualityChange])
 
+    /**
+ * Initialize the YouTube Player API on the container and attach event handlers
+*/
+    const createPlayer = useCallback(async () => {
+        // do not attempt to create a player server-side, it won't work
+        if (typeof document === 'undefined' || container.current === null) return
+        // create player
+        const playerOpts: OptionsType = {
+            ...props.opts,
+            playerVars: {
+                ...props.playerVars,
+                playlist: props.playlist,
+                autoplay: props.autoPlay
+            },
 
+            // preload the `videoId` video if one is already given
+            videoId: props.videoId,
+        }
+        const player = await createYouTubePlayer(container.current, playerOpts)
+        player.on('ready', onPlayerReady)
+        player.on('error', onPlayerError)
+        player.on('stateChange', onPlayerStateChange)
+        player.on('playbackRateChange', onPlayerPlaybackRateChange)
+        player.on('playbackQualityChange', onPlayerPlaybackQualityChange)
+        // internalPlayer.current = player
+        setInternalPlayer(player)
+    }, [props.videoId, props.autoPlay, props.playlist, props.playerVars, props.opts, onPlayerReady, onPlayerError, onPlayerStateChange, onPlayerPlaybackRateChange, onPlayerPlaybackQualityChange])
 
 
     /*-----------------------------------
@@ -127,32 +160,8 @@ export const ReactYouTube = (props: Props) => {
      *  ComponentDidMount
      */
     useEffect(() => {
-        /**
-     * Initialize the YouTube Player API on the container and attach event handlers
-    */
-        const createPlayer = async () => {
-            const videoId = props.videoId || props.opts?.videoId || ''
-            // do not attempt to create a player server-side, it won't work
-            if (typeof document === 'undefined' || container.current === null) return
-            // create player
-            const playerOpts = {
-                ...props.opts,
-                // preload the `videoId` video if one is already given
-                videoId: videoId,
-            }
-
-            const player = await createYouTubePlayer(container.current, playerOpts)
-            player.on('ready', onPlayerReady)
-            player.on('error', onPlayerError)
-            player.on('stateChange', onPlayerStateChange)
-            player.on('playbackRateChange', onPlayerPlaybackRateChange)
-            player.on('playbackQualityChange', onPlayerPlaybackQualityChange)
-
-            // internalPlayer.current = player
-            setInternalPlayer(player)
-        }
         createPlayer()
-    }, [props.opts, props.videoId, onPlayerReady, onPlayerError, onPlayerStateChange, onPlayerPlaybackRateChange, onPlayerPlaybackQualityChange])
+    }, [createPlayer, props.videoId, props.playlist])
 
 
     //update the player ref
@@ -200,50 +209,52 @@ export const ReactYouTube = (props: Props) => {
          * YouTube Player API methods to update the video.
          */
         function updateVideo() {
+            if (props.disableAutoLoad) {
+                return
+            }
             // const player = internalPlayer.current
             const player = internalPlayer
-            const videoId = props.videoId || props.opts?.videoId || ''
+
             if (!player) {
                 return
             }
-            if (typeof videoId === 'undefined' || videoId === null) {
+            if (!props.videoId) {
                 player?.stopVideo()
                 return
             }
 
             // set queueing options
-            const autoplay = props.opts?.playerVars?.autoplay ?? false
+            const autoplay = props?.autoPlay ?? false
             const opts: {
                 startSeconds?: number
                 endSeconds?: number
                 videoId: string
             } = {
-                videoId: videoId
+                videoId: props.videoId
             }
 
-            if (props.opts) {
 
-                if (props.opts.playerVars) {
-                    if (props.opts.playerVars.start) {
-                        opts.startSeconds = props.opts.playerVars.start
-                    }
+            if (props.playerVars) {
+                if (props.playerVars.start) {
+                    opts.startSeconds = props.playerVars.start
+                }
 
-                    if (props.opts.playerVars.end) {
-                        opts.endSeconds = props.opts.playerVars.end
-                    }
+                if (props.playerVars.end) {
+                    opts.endSeconds = props.playerVars.end
                 }
             }
-            // if autoplay is enabled loadVideoById
             if (autoplay) {
                 player.loadVideoById(opts)
                 return
             }
-            // default behaviour just cues the video
             player.cueVideoById(opts)
+
+            // if autoplay is enabled loadVideoById
+
         }
         updateVideo()
-        //eslint-disable-next-line
-    }, [props.opts?.playerVars?.autoplay])
+    }, [props.autoPlay, props.videoId, props.disableAutoLoad, props.playerVars, props?.playlist, internalPlayer])
+
 
 
     return (

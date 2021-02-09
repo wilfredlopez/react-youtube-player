@@ -15,7 +15,7 @@ export type { EventType } from './types'
 
 type BooleanType = 0 | 1 | boolean
 
-interface PlayerVars {
+export interface PlayerVars {
     autoplay?: BooleanType
     color?: string
     controls?: BooleanType
