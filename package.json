@@ -1,5 +1,5 @@
 {
-  "name": "@wl/react-youtube-player",
+  "name": "@wilfredlopez/react-youtube-player",
   "version": "1.0.0",
   "description": "",
   "types": "dist/index.d.ts",
