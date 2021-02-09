@@ -1,20 +1,20 @@
 {
   "name": "@wilfredlopez/react-youtube-player",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "react youtube player component",
-  "types": "lib/index.d.ts",
-  "typings": "lib/index.d.ts",
-  "main": "lib/index.js",
+  "types": "esm/index.d.ts",
+  "typings": "esm/index.d.ts",
+  "main": "esm/index.js",
   "module": "esm/index.js",
   "sideEffects": false,
   "files": [
-    "lib/",
     "esm/"
   ],
   "scripts": {
     "build:cjs": "tsc",
     "build:es": "tsc -m esNext --outDir esm",
-    "build": "yarn build:cjs && yarn build:es",
+    "build-old": "yarn build:cjs && yarn build:es",
+    "build": "yarn build:es",
     "clean": "rimraf lib esm",
     "prebuild": "yarn clean",
     "prepublish": "yarn build"
