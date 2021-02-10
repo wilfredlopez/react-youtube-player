@@ -10,7 +10,7 @@ import type {
 
 
 
-
+let timeout: NodeJS.Timeout | null = null
 
 
 var YouTubePlayer = {
@@ -66,7 +66,9 @@ var YouTubePlayer = {
                                     const onPlayerStateChange = () => {
                                         const playerStateAfterChange = player.getPlayerState() as any
 
-                                        let timeout
+                                        if (timeout) {
+                                            clearTimeout(timeout)
+                                        }
 
                                         if (typeof stateInfo.timeout === 'number') {
                                             timeout = setTimeout(() => {
@@ -82,8 +84,9 @@ var YouTubePlayer = {
                                         ) {
                                             player.removeEventListener('onStateChange', onPlayerStateChange)
 
-                                            clearTimeout(timeout as any)
-
+                                            if (timeout) {
+                                                clearTimeout(timeout)
+                                            }
                                             resolve()
                                         }
                                     }
@@ -162,7 +165,9 @@ var YouTubePlayer = {
                                     const onPlayerStateChange = () => {
                                         const playerStateAfterChange = player.getPlayerState() as any
 
-                                        let timeout
+                                        if (timeout) {
+                                            clearTimeout(timeout)
+                                        }
 
                                         if (typeof stateInfo.timeout === 'number') {
                                             timeout = setTimeout(() => {
@@ -177,8 +182,9 @@ var YouTubePlayer = {
                                             stateInfo.acceptableStates.indexOf(playerStateAfterChange) !== -1
                                         ) {
                                             player.removeEventListener('onStateChange', onPlayerStateChange)
-
-                                            clearTimeout(timeout as any)
+                                            if (timeout) {
+                                                clearTimeout(timeout)
+                                            }
 
                                             resolve()
                                         }

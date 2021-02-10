@@ -1,6 +1,6 @@
 {
   "name": "@wilfredlopez/react-youtube-player",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "react youtube player component",
   "types": "esm/index.d.ts",
   "typings": "esm/index.d.ts",
@@ -34,6 +34,7 @@
     "react": "17.0.1"
   },
   "devDependencies": {
+    "@types/node": "^14.14.25",
     "@types/react": "^17.0.1",
     "react": "^17.0.1",
     "rimraf": "^3.0.2",
