@@ -1,7 +1,7 @@
 
 import EventsProxy from './EventsProxy'
 import loadYouTubeIframeApi from './loadYouTubeIframeApi'
-import YouTubePlayer from './YouTubePlayer'
+import YouTubePlayerProxy from './YouTubePlayerProxy'
 import type {
     YouTubePlayerType,
     IframeApiType,
@@ -19,7 +19,7 @@ export interface PlayerVars {
     autoplay?: BooleanType
     color?: string
     controls?: BooleanType
-    list?: 'user_uploads' | 'playlist'
+    list?: string
     listType?: 'user_uploads' | 'playlist'
     loop?: BooleanType,
     origin?: string
@@ -81,7 +81,7 @@ async function getPlayer(maybeElementId: YouTubePlayerType | string | any, optio
         throw new Error('Element "' + maybeElementId + '" does not exist.')
     }
 
-    options.events = YouTubePlayer.proxyEvents(emitter)
+    options.events = YouTubePlayerProxy.proxyEvents(emitter)
 
     const playerAPIReady = new Promise<YouTubePlayerType>((resolve) => {
         if (typeof maybeElementId === 'object' && maybeElementId.playVideo instanceof Function) {
@@ -104,7 +104,7 @@ async function getPlayer(maybeElementId: YouTubePlayerType | string | any, optio
     })
 
     // const playerApi: YouTubePlayerInterface = YouTubePlayer.promisifyPlayer(playerAPIReady, strictState) as any
-    const playerApi: YouTubePlayerInterface = await YouTubePlayer.awaitPlayer(playerAPIReady, strictState) as any
+    const playerApi: YouTubePlayerInterface = await YouTubePlayerProxy.awaitPlayer(playerAPIReady, strictState) as any
 
 
     //END NEW WAY

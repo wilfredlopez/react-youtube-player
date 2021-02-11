@@ -8,12 +8,7 @@ import type {
 } from './types'
 
 
-
-
-let timeout: NodeJS.Timeout | null = null
-
-
-var YouTubePlayer = {
+const YouTubePlayerProxy = {
     proxyEvents: (emitter: EmitterType): EventHandlerMapType => {
         const events: Record<string, (e: EventType) => void> = {} as any
         const trigger = emitter.trigger.bind(emitter)
@@ -63,9 +58,9 @@ var YouTubePlayer = {
                                 )
                             ) {
                                 return new Promise<void>((resolve) => {
+                                    let timeout: any = null
                                     const onPlayerStateChange = () => {
                                         const playerStateAfterChange = player.getPlayerState() as any
-
                                         if (timeout) {
                                             clearTimeout(timeout)
                                         }
@@ -162,6 +157,7 @@ var YouTubePlayer = {
                                 )
                             ) {
                                 return new Promise<void>((resolve) => {
+                                    let timeout: any = null
                                     const onPlayerStateChange = () => {
                                         const playerStateAfterChange = player.getPlayerState() as any
 
@@ -237,4 +233,4 @@ var YouTubePlayer = {
 //     promisifyPlayer: (playerAPIReady: Promise<YouTubePlayerType>, strictState?: boolean) => YouTubePlayerType
 // };
 
-export default YouTubePlayer
+export default YouTubePlayerProxy
